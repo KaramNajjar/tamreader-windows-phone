@@ -24,14 +24,14 @@
                 <ColumnDefinition Width="99*"/>
                 <ColumnDefinition Width="119*"/>
             </Grid.ColumnDefinitions>
-            <CaptureElement x:ConnectionId='12' x:Name="PreviewControl" Stretch="Uniform" Margin="2.333,8,5.333,18" Grid.Column="2" RenderTransformOrigin="0.5,0.5">
+            <CaptureElement x:ConnectionId='15' x:Name="PreviewControl" Stretch="Uniform" Margin="2.333,8,5.333,18" Grid.Column="2" RenderTransformOrigin="0.5,0.5">
                 <CaptureElement.RenderTransform>
                     <CompositeTransform ScaleY="-1"/>
                 </CaptureElement.RenderTransform>
             </CaptureElement>
 
         </Grid>
-        <Image x:ConnectionId='3' x:Name="stopImg" HorizontalAlignment="Left" Height="278" Margin="37,54,0,0" VerticalAlignment="Top" Width="282" Source="stop.png" AutomationProperties.Name="stopImg" Visibility="Collapsed" Grid.Row="1"/>
+        <Image x:ConnectionId='3' x:Name="stopImg" HorizontalAlignment="Left" Height="278" Margin="37,54,0,0" VerticalAlignment="Top" Width="282" Source="images/STOP.png" AutomationProperties.Name="stopImg" Visibility="Collapsed" Grid.Row="1"/>
         <MediaElement x:ConnectionId='4' x:Name="failMediaElement" HorizontalAlignment="Left" Height="60" Margin="286,10,0,0" Grid.Row="0" VerticalAlignment="Top" Width="52" AutoPlay="False" Source="/Assets/fail.mp3"/>
         <MediaElement x:ConnectionId='5' x:Name="successMediaElement" HorizontalAlignment="Left" Height="60" Margin="283,17,0,0" Grid.Row="0" VerticalAlignment="Top" Width="52" AutoPlay="False" Source="/Assets/success.mp3"/>
         <TextBlock x:ConnectionId='6' x:Name="textBlock1" HorizontalAlignment="Left" Margin="76,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Current Speed" VerticalAlignment="Top" Height="46" Width="212" FontSize="30"/>
@@ -40,6 +40,13 @@
         <TextBlock x:ConnectionId='9' x:Name="textBlock2" HorizontalAlignment="Left" Margin="11,47,0,0" TextWrapping="Wrap" Text="smart mode:" VerticalAlignment="Top" Width="151" Height="37" FontSize="22"/>
         <Image x:ConnectionId='10' x:Name="image1" HorizontalAlignment="Left" Height="40" Margin="96,3,0,0" VerticalAlignment="Top" Width="169" Source="logo.jpg"/>
         <TextBlock x:ConnectionId='11' x:Name="unitsText" HorizontalAlignment="Left" Margin="225,178,0,0" Grid.Row="1" TextWrapping="Wrap" Text="cm/sec" VerticalAlignment="Top" Width="51" Height="24" FontWeight="Bold"/>
+        <Button x:ConnectionId='12' x:Name="button" Content="" HorizontalAlignment="Left" Margin="2,-1,0,0" VerticalAlignment="Top" Height="45" Width="45"                     >
+            <Button.Background>
+                <ImageBrush Stretch="Fill" ImageSource="images/upCloud.png"/>
+            </Button.Background>
+        </Button>
+        <TextBlock x:ConnectionId='13' x:Name="textBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="line:" VerticalAlignment="Top" Margin="269,11,0,0"/>
+        <TextBlock x:ConnectionId='14' x:Name="lineColorText" HorizontalAlignment="Left" Margin="303,12,0,0" TextWrapping="Wrap" Text="B" VerticalAlignment="Top" Height="21" Width="15"/>
 
     </Grid>
 </Page>

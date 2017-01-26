@@ -410,6 +410,9 @@
     <AppxPackagedFile Include="C:\Users\dell\documents\visual studio 2015\Projects\tamreader\tamreader\images\turnRight.png">
       <PackagePath>images\turnRight.png</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\dell\documents\visual studio 2015\Projects\tamreader\tamreader\images\upCloud.png">
+      <PackagePath>images\upCloud.png</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\dell\documents\visual studio 2015\Projects\tamreader\tamreader\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>

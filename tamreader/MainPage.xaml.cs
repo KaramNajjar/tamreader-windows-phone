@@ -92,6 +92,7 @@ namespace tamreader
         private bool toCall = false;
         int stopCounter = 0;
         private static bool violating; // for counting speed violation
+        private static bool gotData = false;
 
         public MainPage()
         {
@@ -152,6 +153,7 @@ namespace tamreader
                     {
                         signsData[i++] = new Sign(sign);
                     }
+                   gotData = true;
                 }
             }
             catch (Exception x)
@@ -170,7 +172,8 @@ namespace tamreader
                 if (int.Parse(lastSpeed) == 0)
                 {
                     //CAR STOPPED
-                    signsData[3].ObeyTimes++;
+                    if(gotData)
+                        signsData[3].ObeyTimes++;
                     successMediaElement.Play();
                     stopCounter = 0;
                     stopImg.Visibility = Visibility.Collapsed;
@@ -186,7 +189,8 @@ namespace tamreader
                 if (int.Parse(lastSpeed) == 0)
                 {
                     //CAR STOPPED
-                    signsData[3].ObeyTimes++;
+                    if (gotData)
+                        signsData[3].ObeyTimes++;
                     successMediaElement.Play();
                     stopCounter = 0;
                     stopImg.Visibility = Visibility.Collapsed;
@@ -198,7 +202,8 @@ namespace tamreader
                 else
                 {
                     //CAR DIDN'T STOP
-                    signsData[3].DisobeyTimes++;
+                    if (gotData)
+                        signsData[3].DisobeyTimes++;
                     failMediaElement.Play();
                     stopCounter = 0;
                     stopImg.Visibility = Visibility.Collapsed;
@@ -269,16 +274,19 @@ namespace tamreader
 
         private async void UploadSignsData()
         {
-            try
+            if (gotData)
             {
-                for (int i = 0; i < SIGNS_NUMBER; i++)
+                try
                 {
-                    await client.CreateSignAsync(signsData[i]);
+                    for (int i = 0; i < SIGNS_NUMBER; i++)
+                    {
+                        await client.CreateSignAsync(signsData[i]);
 
+                    }
                 }
-            }
-            catch (Exception)
-            {
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -337,7 +345,7 @@ namespace tamreader
                 videoFrameHeight = (int)previewProperties.Width;
             }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 7; i++)
             {
                 // Create the video frame to request a SoftwareBitmap preview frame.
                 var videoFrame = new VideoFrame(BitmapPixelFormat.Bgra8, videoFrameWidth, videoFrameHeight);
@@ -366,57 +374,9 @@ namespace tamreader
 
                     foreach (var word in line.Words)
                     {
-                        //all_words.Add(word.Text);
-                        switch (word.Text.ToUpper())
-                        {
-
-                            case "STOP":
-                            case "TOP":
-                            case "STO":
-                                sign = CURR_SIGN.STOP;
-                                minimizeSpeedView();
-                                stopImg.Visibility = Visibility.Visible;
-                                stopTimer.Start();
-                                i = 1000; //break the capturing
-                                break;
-
-                            case "30":
-                                speedLimit = 30;
-                                sign = CURR_SIGN.SPEED_LOW;
-                                i = 1000;//break the capturing
-                                break;
-
-                            case "50":
-                                speedLimit = 50;
-                                sign = CURR_SIGN.SPEED_HIGH;
-                                i = 1000;//break the capturing
-
-                                break;
-
-                            case "ENTRY":
-                            case "NTR":
-                            case "ENT":
-                            case "NO":
-                            case "NO ENTRY":
-                                sign = CURR_SIGN.NO_ENTRY;
-                                i = 1000;
-                                break;
-
-
-                            case "LEFT":
-                                sign = CURR_SIGN.Left;
-                                i = 1000;
-                                break;
-
-                            case "RIGHT":
-                                sign = CURR_SIGN.RIGHT;
-                                i = 1000;
-                                break;
-                        }
-
-
-
-
+                        if (RecognizeWord(word.Text.ToUpper()))
+                            i = 1000;
+                        
                     }
 
 
@@ -424,6 +384,72 @@ namespace tamreader
                 }
             }
             isCapturing = false;
+        }
+
+        private bool RecognizeWord(string upperWord)
+        {
+            if (upperWord.Contains('L') || upperWord.Contains('F'))
+            {
+                //LEFT
+                sign = CURR_SIGN.Left;
+                return true;
+            }
+            else
+            {
+                if (upperWord.Contains("GH") || upperWord.Contains('G') || upperWord.Contains('H'))
+                {
+                    //RIGHT
+                    sign = CURR_SIGN.RIGHT;
+                    return true;
+                }
+                else
+                {
+                    if (upperWord == "30")
+                    {
+                        //speed 30
+                        speedLimit = 30;
+                        sign = CURR_SIGN.SPEED_LOW;
+                        return true;
+                    }
+                    else
+                    {
+                        if (upperWord == "50")
+                        {
+                            //speed 50
+                            speedLimit = 50;
+                            sign = CURR_SIGN.SPEED_HIGH;
+                            return true;
+                        }
+                        else
+                        {
+                            if (upperWord.Contains('N') || upperWord.Contains('Y'))
+                            {
+                                //no entry
+                                sign = CURR_SIGN.NO_ENTRY;
+                                return true;
+                            }
+                            else
+                            {
+                                //stop
+                                if (upperWord.Contains('P') || upperWord.Contains("ST") || upperWord.Contains("TO"))
+                                {
+                                    sign = CURR_SIGN.STOP;
+                                    minimizeSpeedView();
+                                    stopImg.Visibility = Visibility.Visible;
+                                    stopTimer.Start();
+                                    return true;
+                                }
+                                else {
+                                    return false;  //no sign recognized
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
         }
 
 
@@ -739,12 +765,14 @@ namespace tamreader
                         if (speedLimit == 30)
                         {
                             //SPEED LOW
-                            signsData[2].DisobeyTimes++;
+                            if (gotData)
+                                signsData[2].DisobeyTimes++;
                         }
                         else
                         {
                             //SPEED HIGH
-                            signsData[1].DisobeyTimes++;
+                            if (gotData)
+                                signsData[1].DisobeyTimes++;
 
                         }
                     }
@@ -752,9 +780,13 @@ namespace tamreader
                 }
                 if (toCall)
                 {
+                    lineColorText.Text = "W";
                     toCall = false;
                     await CaptureAndGetSign();
 
+                }
+                else {
+                    lineColorText.Text = "B";
                 }
 
                 string status = connectBtn.Content.ToString();
@@ -811,7 +843,8 @@ namespace tamreader
                           (new Uri(src, UriKind.Absolute));
                     stopImg.Visibility = Visibility.Visible;
                     minimizeSpeedView();
-                    signsData[0].DisobeyTimes++;//no entry violation
+                    if (gotData)
+                        signsData[0].DisobeyTimes++;//no entry violation
                     failMediaElement.Play();
 
                     sign = CURR_SIGN.NONE;
@@ -1105,6 +1138,11 @@ namespace tamreader
             {
                 smartMode = false;
             }
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            UploadSignsData();
         }
     }
 }

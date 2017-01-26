@@ -128,6 +128,7 @@
     <Content Include="images\turnLeft.png" />
     <Content Include="images\turnRight.gif" />
     <Content Include="images\turnRight.png" />
+    <Content Include="images\upCloud.png" />
     <Content Include="logo.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
